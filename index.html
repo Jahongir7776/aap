@@ -1,58 +1,136 @@
+
 <!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kafe Buyurtma</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <h2>Buyurtma shakli</h2>
 
     <form id="orderForm">
-        <label>Ism:</label><br>
-        <input type="text" name="ism" placeholder="Ismingizni kiriting" required><br><br>
+        <label for="ism">Ism:</label>
+        <input type="text" id="ism" name="ism" placeholder="Ismingizni kiriting" required>
 
-        <label>Familiya:</label><br>
-        <input type="text" name="familiya" placeholder="Familiyangizni kiriting" required><br><br>
+        <label for="familiya">Familiya:</label>
+        <input type="text" id="familiya" name="familiya" placeholder="Familiyangizni kiriting" required>
 
-        <label>Email:</label><br>
-        <input type="email" name="email" placeholder="....@gmail.com" required><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="....@gmail.com" required>
 
-        <label>Telefon:</label><br>
-        <input type="text" name="telefon" placeholder="Telefon raqamingizni kiriting" required><br><br>
+        <label for="telefon">Telefon:</label>
+        <input type="tel" id="telefon" name="telefon" placeholder="+998901234567" required>
 
-        <label>Manzil:</label><br>
-        <input type="text" name="manzil" placeholder="Manzilingizni kiriting" required><br><br>
+        <label for="manzil">Manzil:</label>
+        <input type="text" id="manzil" name="manzil" placeholder="Manzilingizni kiriting" required>
 
         <button type="submit">Yuborish</button>
     </form>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
+        
+        // WebApp ni kengaytirish
         tg.expand();
+        
+        // Tema ranglarini qo'llash
+        document.body.style.backgroundColor = tg.themeParams.bg_color || '#ffffff';
+        document.body.style.color = tg.themeParams.text_color || '#000000';
 
         const form = document.getElementById('orderForm');
+        const submitButton = form.querySelector('button[type="submit"]');
 
+        // Forma ma'lumotlarini tekshirish
+        function validateForm() {
+            const formData = new FormData(form);
+            let isValid = true;
+            
+            for (let [key, value] of formData.entries()) {
+                if (!value.trim()) {
+                    isValid = false;
+                    break;
+                }
+            }
+            
+            // Main Button ni boshqarish
+            if (isValid) {
+                tg.MainButton.setText("Yuborish");
+                tg.MainButton.show();
+            } else {
+                tg.MainButton.hide();
+            }
+        }
+
+        // Input maydonlarini kuzatish
+        form.addEventListener('input', validateForm);
+
+        // Forma yuborilganda
         form.addEventListener('submit', function(e) {
             e.preventDefault();
+            sendData();
+        });
 
-            const ism = form.ism.value;
-            const familiya = form.familiya.value;
-            const email = form.email.value;
-            const telefon = form.telefon.value;
-            const manzil = form.manzil.value;
+        // Main Button bosilganda
+        tg.MainButton.onClick(sendData);
 
-            const data = {
-                ism,
-                familiya,
-                email,
-                telefon,
-                manzil
-            };
+        function sendData() {
+            const formData = new FormData(form);
+            const data = {};
+            
+            // FormData dan oddiy obyektga o'tkazish
+            for (let [key, value] of formData.entries()) {
+                data[key] = value.trim();
+            }
 
             console.log("Yuborilayotgan ma'lumotlar:", data);
-            tg.sendData(JSON.stringify(data));
-            tg.close();
-        });
+
+            try {
+                // Ma'lumotlarni Telegram botga yuborish
+                tg.sendData(JSON.stringify(data));
+            } catch (error) {
+                console.error("Xatolik:", error);
+                alert("Ma'lumotlarni yuborishda xatolik yuz berdi!");
+            }
+        }
+
+        // Dastlabki tekshiruv
+        validateForm();
     </script>
 </body>
 </html>
