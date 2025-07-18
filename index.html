@@ -8,17 +8,20 @@
     <h2>Buyurtma shakli</h2>
 
     <form id="orderForm">
-        <label>ISM:</label><br>
-        <input type="text" name="ismi" placeholder="ismingizni kiriting" required><br><br>
+        <label>Ism:</label><br>
+        <input type="text" name="ism" placeholder="Ismingizni kiriting" required><br><br>
 
         <label>Familiya:</label><br>
-        <input type="text" name="familiya" placeholder="familiyangizni kiriting" required><br><br>
+        <input type="text" name="familiya" placeholder="Familiyangizni kiriting" required><br><br>
 
-        <label>email:</label><br>
-        <input type="text" name="email" placeholder="....@gmail.com" required><br><br>
+        <label>Email:</label><br>
+        <input type="email" name="email" placeholder="....@gmail.com" required><br><br>
 
-        <label>parol:</label><br>
-        <input type="text" name="parol" placeholder="parolingizni kiriting" required><br><br>
+        <label>Telefon:</label><br>
+        <input type="text" name="telefon" placeholder="Telefon raqamingizni kiriting" required><br><br>
+
+        <label>Manzil:</label><br>
+        <input type="text" name="manzil" placeholder="Manzilingizni kiriting" required><br><br>
 
         <button type="submit">Yuborish</button>
     </form>
@@ -30,16 +33,12 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const food = form.food.value;
-            const fio = form.fio.value;
-            const phone = form.phone.value;
-            const address = form.address.value;
-
             const data = {
-                food,
-                fio,
-                phone,
-                address
+                ism: form.ism.value,
+                familiya: form.familiya.value,
+                email: form.email.value,
+                telefon: form.telefon.value,
+                manzil: form.manzil.value
             };
 
             tg.sendData(JSON.stringify(data));
