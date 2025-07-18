@@ -28,24 +28,31 @@
 
     <script>
         const tg = window.Telegram.WebApp;
+        tg.expand();
+
         const form = document.getElementById('orderForm');
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const ism = form.ism.value;
+            const familiya = form.familiya.value;
+            const email = form.email.value;
+            const telefon = form.telefon.value;
+            const manzil = form.manzil.value;
+
             const data = {
-                ism: form.ism.value,
-                familiya: form.familiya.value,
-                email: form.email.value,
-                telefon: form.telefon.value,
-                manzil: form.manzil.value
+                ism,
+                familiya,
+                email,
+                telefon,
+                manzil
             };
 
+            console.log("Yuborilayotgan ma'lumotlar:", data);
             tg.sendData(JSON.stringify(data));
             tg.close();
         });
-
-        tg.expand();
     </script>
 </body>
 </html>
